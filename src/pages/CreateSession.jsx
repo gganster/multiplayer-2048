@@ -2,13 +2,25 @@ import { v4 as uuidv4 } from 'uuid';
 import {useState, useEffect} from "react";
 import { Loader2 } from "lucide-react"
 import { useRef } from 'react';
+import {ref, set, onValue} from "firebase/database";
+import {db} from "../firebase";
 
 export default function CreateSession() {
   const sessionId = useRef(String(Math.ceil(Math.random() * 9999)).padStart(4, '0'));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
+    (async () => {
+      await set(ref(db, 'sessions/' + sessionId.current), {
+        sessionId: sessionId.current,
+        state: "WAITING_FOR_OPPONENT",
+      });
+      onValue(ref(db, 'sessions/' + sessionId.current), (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
+      });
+      setLoading(false);
+    })()
   }, []);
 
   return (

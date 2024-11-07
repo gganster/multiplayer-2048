@@ -10,8 +10,13 @@ import HomePage from "./pages/Home";
 import HomeLayout from "./layouts/HomeLayout";
 import CreateSession from "./pages/CreateSession";
 import JoinSession from "./pages/JoinSession";
+import PlayingBoard from "./pages/PlayingBoard";
 
 const router = createBrowserRouter([
+  {
+    path: "/game/:sessionId",
+    element: <PlayingBoard />
+  },
   {
     path: "/",
     element: <HomeLayout />,

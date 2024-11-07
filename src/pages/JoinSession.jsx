@@ -2,32 +2,39 @@ import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
-
-const Sparkles = () => (
-  <div className="absolute inset-0 pointer-events-none">
-    {[...Array(6)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-blue-300 rounded-full"
-        initial={{ scale: 0, x: "50%", y: "50%" }}
-        animate={{
-          scale: [0, 1.5, 0],
-          x: ["50%", `${Math.random() * 100}%`],
-          y: ["50%", `${Math.random() * 100}%`],
-        }}
-        transition={{
-          duration: 0.6,
-          repeat: Infinity,
-          delay: i * 0.1,
-        }}
-      />
-    ))}
-  </div>
-);
+import {ref, set, onValue, get} from "firebase/database";
+import {db} from "../firebase";
+import { toast } from "sonner";
 
 export default function JoinSession() {
   const [sessionId, setSessionId] = useState(["", "", "", ""]);
   const inputRefs = useRef([]);
+
+  const joinSession = async () => {
+    const sessionIdValue = sessionId.join("");
+    const sessionRef = ref(db, "sessions/" + sessionIdValue);
+    const sessionSnapshot = await get(sessionRef);
+    if (sessionSnapshot.exists()) {
+      const session = sessionSnapshot.val();
+      if (session.state === "WAITING_FOR_OPPONENT") {
+        onValue(sessionRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data.state === "PLAYING") {
+
+          }
+        });
+        set(ref(sessionRef), {
+          ...session,
+          state: "OPPONENT_JOINING",
+        });
+        toast("Session joined successfully!");
+      } else {
+        toast("Session is not available!");
+      }
+    } else {
+      toast("Session not found!");
+    }
+  }
 
   const handleChange = (index, value) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
@@ -63,7 +70,7 @@ export default function JoinSession() {
       </div>
       {sessionId.join("").length === 4 ? (
         <div className="relative mt-4">
-          <Button className="w-full py-2  font-semibold rounded-lg">
+          <Button className="w-full py-2  font-semibold rounded-lg" onClick={joinSession}>
             Join Session
           </Button>
         </div>
