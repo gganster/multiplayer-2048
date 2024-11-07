@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.vsGradient {
+  background: rgb(44,199,240);
+  background: linear-gradient(90deg, rgba(44,199,240,1) 45%, rgba(255,255,255,1) 50%, rgba(237,82,68,1) 55%);
+}
+
+#tsparticles1, #tsparticles2 {
+    height: 100vh;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    z-index: 0;
+}
+
