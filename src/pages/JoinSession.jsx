@@ -5,8 +5,10 @@ import Button from "@/components/ui/Button";
 import {ref, set, onValue, get} from "firebase/database";
 import {db} from "../firebase";
 import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom';
 
 export default function JoinSession() {
+  const navigate = useNavigate();
   const [sessionId, setSessionId] = useState(["", "", "", ""]);
   const inputRefs = useRef([]);
 
@@ -20,10 +22,10 @@ export default function JoinSession() {
         onValue(sessionRef, (snapshot) => {
           const data = snapshot.val();
           if (data.state === "PLAYING") {
-
+            navigate(`/game/B/${sessionIdValue}`);
           }
         });
-        set(ref(sessionRef), {
+        set(sessionRef, {
           ...session,
           state: "OPPONENT_JOINING",
         });
@@ -50,6 +52,9 @@ export default function JoinSession() {
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace" && !sessionId[index] && index > 0) {
       inputRefs.current[index - 1].focus();
+    }
+    if (e.key === "Enter" && sessionId.join("").length === 4) {
+      joinSession();
     }
   };
 

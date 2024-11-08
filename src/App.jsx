@@ -10,12 +10,12 @@ import HomePage from "./pages/Home";
 import HomeLayout from "./layouts/HomeLayout";
 import CreateSession from "./pages/CreateSession";
 import JoinSession from "./pages/JoinSession";
-import PlayingBoard from "./pages/PlayingBoard";
+import Game from "./pages/Game";
 
 const router = createBrowserRouter([
   {
-    path: "/game/:sessionId",
-    element: <PlayingBoard />
+    path: "/game/:player/:sessionId",
+    element: <Game />
   },
   {
     path: "/",

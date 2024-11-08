@@ -4,8 +4,11 @@ import { Loader2 } from "lucide-react"
 import { useRef } from 'react';
 import {ref, set, onValue} from "firebase/database";
 import {db} from "../firebase";
+import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateSession() {
+  const navigate = useNavigate();
   const sessionId = useRef(String(Math.ceil(Math.random() * 9999)).padStart(4, '0'));
   const [loading, setLoading] = useState(false);
 
@@ -15,8 +18,16 @@ export default function CreateSession() {
         sessionId: sessionId.current,
         state: "WAITING_FOR_OPPONENT",
       });
-      onValue(ref(db, 'sessions/' + sessionId.current), (snapshot) => {
+      onValue(ref(db, 'sessions/' + sessionId.current), async (snapshot) => {
         const data = snapshot.val();
+        if (data.state === "OPPONENT_JOINING") {
+          toast("Opponent joined the game!");
+          await set(ref(db, 'sessions/' + sessionId.current), {
+            ...data,
+            state: "PLAYING",
+          });
+          navigate(`/game/A/${sessionId.current}`);
+        }
         console.log(data);
       });
       setLoading(false);
