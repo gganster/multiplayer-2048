@@ -3,9 +3,10 @@ import {useState, useEffect} from "react";
 import { Loader2 } from "lucide-react"
 import { useRef } from 'react';
 import {ref, set, onValue} from "firebase/database";
-import {db} from "../firebase";
+import {db} from "@/firebase";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
+import { addNumber } from '@/utils/gameLogic';
 
 export default function CreateSession() {
   const navigate = useNavigate();
@@ -13,25 +14,33 @@ export default function CreateSession() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let subscribe = null;
+
     (async () => {
       await set(ref(db, 'sessions/' + sessionId.current), {
         sessionId: sessionId.current,
         state: "WAITING_FOR_OPPONENT",
       });
-      onValue(ref(db, 'sessions/' + sessionId.current), async (snapshot) => {
+      subscribe = onValue(ref(db, 'sessions/' + sessionId.current), async (snapshot) => {
         const data = snapshot.val();
         if (data.state === "OPPONENT_JOINING") {
           toast("Opponent joined the game!");
           await set(ref(db, 'sessions/' + sessionId.current), {
             ...data,
+            boardA: addNumber(Array(4).fill().map(() => Array(4).fill(0))),
+            boardB: addNumber(Array(4).fill().map(() => Array(4).fill(0))),
+            createdAt: new Date().toISOString(),
             state: "PLAYING",
           });
           navigate(`/game/A/${sessionId.current}`);
         }
-        console.log(data);
       });
       setLoading(false);
     })()
+
+    return () => {
+      if (subscribe) subscribe();
+    }
   }, []);
 
   return (

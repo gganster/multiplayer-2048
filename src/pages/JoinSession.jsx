@@ -1,6 +1,4 @@
 import React, { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 import {ref, set, onValue, get} from "firebase/database";
 import {db} from "../firebase";
