@@ -6,16 +6,22 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import HomePage from "./pages/Home";
+
 import HomeLayout from "./layouts/HomeLayout";
+import GameLayout from "./layouts/GameLayout";
+
+import HomePage from "./pages/Home";
 import CreateSession from "./pages/CreateSession";
 import JoinSession from "./pages/JoinSession";
 import Game from "./pages/Game";
 
 const router = createBrowserRouter([
   {
-    path: "/game/:player/:sessionId",
-    element: <Game />
+    path: "/game",
+    element: <GameLayout />,
+    children: [
+      {path: "/game/:player/:sessionId", element: <Game />}
+    ]
   },
   {
     path: "/",

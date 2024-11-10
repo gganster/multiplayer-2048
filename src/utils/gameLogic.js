@@ -106,3 +106,13 @@ export const checkGameOver = (grid) => {
   }
   return true;
 };
+
+export const computeScore = (grid) => {
+  if (!grid) return 0;
+  return grid.flat().reduce((acc, val) => acc + val, 0);
+}
+
+
+export const hasWon = (grid) => {
+  return grid.flat().some((val) => val >= 2048);
+}
