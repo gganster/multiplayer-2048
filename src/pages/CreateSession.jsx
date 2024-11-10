@@ -33,10 +33,10 @@ export default function CreateSession() {
             boardB: addNumber(Array(4).fill().map(() => Array(4).fill(0))),
             stateA: "PLAYING",
             stateB: "PLAYING",
-            queueA: [],
-            queueB: [],
+            queueA: 0,
+            queueB: 0,
             bonusA: [{uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "blind"}, {uid: uuidv4(), type: "ice"}],
-            bonusB: [{uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "fire"}],
+            bonusB: [{uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "blind"}, {uid: uuidv4(), type: "ice"}],
             createdAt: new Date().toISOString(),
             state: "PLAYING",
           });

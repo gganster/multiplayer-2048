@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { computeScore } from "@/utils/gameLogic";
+import { computeScore, applyFireEffect } from "@/utils/gameLogic";
+import { set, ref } from "firebase/database";
+import { db } from "@/firebase";
 
 import Tile from "./Tile";
 import Bonus from "./Bonus";
@@ -22,22 +23,50 @@ export default function Game() {
   const [iceTarget, setIceTarget] = useState(null);
   const [blindTarget, setBlindTarget] = useState(null);
 
+  const startAnimation = (animation, target) => new Promise(resolve => {
+    if (animation === "fire") {
+      setFireballTarget(target);
+      setTimeout(() => {
+        setFireballTarget(null)
+        resolve();
+      }, 2000);
+    }
+    if (animation === "ice") {
+      setIceTarget(target);
+      setTimeout(() => {
+        setIceTarget(null)
+        resolve();
+      }, 10000);
+    }
+    if (animation === "blind") {
+      setBlindTarget(target);
+      setTimeout(() => {
+        setBlindTarget(null)
+        resolve();
+      }, 20000);
+    }
+  })
+
+
+  useEffect(() => {
+    (async () => {
+      if (!gameData) return;
+      if (!gameData[`queue${player}`]?.type) return;
+  
+      await startAnimation(gameData[`queue${player}`]?.type, player);
+      await set(ref(db, `sessions/${sessionId}/queue${player}`), 0);
+
+      if (gameData[`queue${player}`]?.type === "fire") {
+        const newGrid = applyFireEffect(gameData[`board${player}`]);
+        await set(ref(db, `sessions/${sessionId}/board${player}`), newGrid);
+      }
+    })()
+  }, [gameData?.[`queue${player}`]]);
+
   const _activateBonus = async (item) => {
     const targetBoard = player === "A" ? "B" : "A";
     await activateBonus(item?.uid);
-
-    if (item?.type === "fire") {
-      setFireballTarget(targetBoard);
-      setTimeout(() => setFireballTarget(null), 2000); 
-    }
-    if (item?.type === "ice") {
-      setIceTarget(targetBoard);
-      setTimeout(() => setIceTarget(null), 10000);
-    }
-    if (item?.type === "blind") {
-      setBlindTarget(targetBoard);
-      setTimeout(() => setBlindTarget(null), 20000);
-    }
+    startAnimation(item?.type, targetBoard);
   }
 
   if (!gameData) return <div>Loading...</div>;
@@ -54,7 +83,10 @@ export default function Game() {
         </div>
         <div className="flex justify-center gap-2">
           {gameData.bonusA.map(i => (
-            <Bonus key={i.uid} item={i} onActivate={_activateBonus}/>
+            <Bonus key={i.uid} item={i} onActivate={(bonus) => {
+              if (player === "B") return;
+              _activateBonus(bonus)
+            }}/>
           ))}
         </div>
       </GameStartAnimation>
@@ -67,7 +99,10 @@ export default function Game() {
         </div>
         <div className="flex justify-center gap-2">
           {gameData.bonusB.map(i => (
-            <Bonus key={i.uid} item={i} onActivate={_activateBonus}/>
+            <Bonus key={i.uid} item={i} onActivate={(bonus) => {
+              if (player === "A") return;
+              _activateBonus(bonus)
+            }}/>
           ))}
         </div>
       </GameStartAnimation>

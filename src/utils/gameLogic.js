@@ -116,3 +116,35 @@ export const computeScore = (grid) => {
 export const hasWon = (grid) => {
   return grid.flat().some((val) => val >= 2048);
 }
+
+export const applyFireEffect = (grid) => {
+  const getRandomNonEmptyTiles = (board) => {
+    const positions = [];
+    board.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        if (cell !== 0) {
+          positions.push([i, j]);
+        }
+      });
+    });
+    
+    // Shuffle array and take first 3 positions
+    return positions
+      .sort(() => Math.random() - 0.5)
+      .slice(0, Math.min(3, positions.length));
+  };
+
+  const positions = getRandomNonEmptyTiles(grid);
+  const board = [...grid].map(row => [...row]);
+  positions.forEach(([i, j]) => {
+    board[i][j] = 0;
+  });
+
+  //si le board est vide, on ajoute un 2
+  if (board.flat().every(cell => cell === 0)) {
+    console.log("board is empty, adding a 2");
+    board[Math.floor(Math.random() * 4)][Math.floor(Math.random() * 4)] = 2;
+  }
+
+  return board;
+}
