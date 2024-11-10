@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { computeScore } from "@/utils/gameLogic";
 import Tile from "./Tile";
+import Bonus from "./Bonus";
 import use2048 from "../../hooks/use2048";
 
 export default function Game() {
@@ -46,6 +47,11 @@ export default function Game() {
             </React.Fragment>
           )}
         </div>
+        <div className="flex justify-center gap-2">
+          {gameData.bonusA.map(i => (
+            <Bonus key={i.uid} item={i} />
+          ))}
+        </div>
       </motion.div>
       <motion.div 
         className="w-80 absolute flex flex-col gap-5"
@@ -64,6 +70,11 @@ export default function Game() {
           {gameData.boardB.map((row, i) =>
             row.map((value, j) => <Tile key={`${i}-${j}`} value={value} player="B" />)
           )}
+        </div>
+        <div className="flex justify-center gap-2">
+          {gameData.bonusB.map(i => (
+            <Bonus key={i.uid} item={i} />
+          ))}
         </div>
       </motion.div>
     </div>
