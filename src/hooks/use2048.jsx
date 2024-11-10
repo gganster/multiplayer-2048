@@ -60,7 +60,21 @@ export default function use2048(player, sessionId) {
     }
   }
 
+  const activateBonus = async (uid) => {
+    const usersBonus = gameData[`bonus${player}`];
+
+    const bonus = usersBonus.find(b => b?.uid === uid);
+    const index = usersBonus.findIndex(b => b?.uid === uid);
+    const newBonusArray = usersBonus.map((b, i) => i === index ? 0 : b);
+
+    if (!bonus) return;
+
+    await set(ref(db, `sessions/${sessionId}/queue${player === "A" ? "B" : "A"}`), bonus);
+    await set(ref(db, `sessions/${sessionId}/bonus${player}`), newBonusArray);
+  }
+
   return {
-    gameData
+    gameData,
+    activateBonus,
   }
 }

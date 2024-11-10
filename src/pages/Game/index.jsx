@@ -8,7 +8,7 @@ import use2048 from "../../hooks/use2048";
 
 export default function Game() {
   const { player, sessionId } = useParams();
-  const {gameData} = use2048(player, sessionId);
+  const {gameData, activateBonus} = use2048(player, sessionId);
   const scoreA = useMemo(() => computeScore(gameData?.boardA), [gameData]);
   const scoreB = useMemo(() => computeScore(gameData?.boardB), [gameData]);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -22,6 +22,11 @@ export default function Game() {
       delay: 1
     }
   };
+
+  const _activateBonus = async (item) => {
+    console.log(item)
+    await activateBonus(item?.uid);
+  }
 
   if (!gameData) return <div>Loading...</div>;
   return (
@@ -49,7 +54,7 @@ export default function Game() {
         </div>
         <div className="flex justify-center gap-2">
           {gameData.bonusA.map(i => (
-            <Bonus key={i.uid} item={i} />
+            <Bonus key={i.uid} item={i} onActivate={_activateBonus}/>
           ))}
         </div>
       </motion.div>
