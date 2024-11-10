@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {useState, useEffect} from "react";
 import { onValue, ref, set } from "firebase/database";
 import { moveGrid, addNumber, checkGameOver, computeScore, hasWon } from '@/utils/gameLogic';
@@ -47,8 +48,10 @@ export default function use2048(player, sessionId) {
     const {grid: newGrid} = moveGrid(grid, direction);
     if (JSON.stringify(grid) !== JSON.stringify(newGrid)) {
       const gridWithNewNumber = addNumber(newGrid);
-      console.log(gridWithNewNumber.map(row => row.join(" ")).join("\n"));
       await set(ref(db, "sessions/" + sessionId + "/" + (player === "A" ? "boardA" : "boardB")), gridWithNewNumber);
+
+      //random bonus
+      if (Math.random() < 0.1) randomlyAddBonus();
     }
 
     //check won state
@@ -61,6 +64,18 @@ export default function use2048(player, sessionId) {
     }
   }
 
+  const randomlyAddBonus = () => {
+    console.log("randomly add bonus");
+
+    const actuals = [...gameData[`bonus${player}`]];
+    const emptyIndex = actuals.findIndex(b => !b);
+    if (emptyIndex === -1) return;
+
+    const random = Math.floor(Math.random() * 3);
+    actuals[emptyIndex] = {uid: uuidv4(), type: random === 0 ? "fire" : random === 1 ? "ice" : "blind"};
+    set(ref(db, `sessions/${sessionId}/bonus${player}`), actuals);
+  }
+
   const activateBonus = async (uid) => {
     const usersBonus = gameData[`bonus${player}`];
 
@@ -71,7 +86,7 @@ export default function use2048(player, sessionId) {
     if (!bonus) return;
 
     await set(ref(db, `sessions/${sessionId}/queue${player === "A" ? "B" : "A"}`), bonus);
-    //await set(ref(db, `sessions/${sessionId}/bonus${player}`), newBonusArray);
+    await set(ref(db, `sessions/${sessionId}/bonus${player}`), newBonusArray);
   }
 
   return {
