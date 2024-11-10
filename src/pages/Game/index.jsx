@@ -10,6 +10,7 @@ import Ice from "./animations/Ice";
 import GameStartAnimation from "./animations/GameStartAnimation";
 
 import use2048 from "../../hooks/use2048";
+import Blind from "./animations/Blind";
 
 export default function Game() {
   const { player, sessionId } = useParams();
@@ -19,6 +20,7 @@ export default function Game() {
 
   const [fireballTarget, setFireballTarget] = useState(null);
   const [iceTarget, setIceTarget] = useState(null);
+  const [blindTarget, setBlindTarget] = useState(null);
 
   const _activateBonus = async (item) => {
     const targetBoard = player === "A" ? "B" : "A";
@@ -31,6 +33,10 @@ export default function Game() {
     if (item?.type === "ice") {
       setIceTarget(targetBoard);
       setTimeout(() => setIceTarget(null), 10000);
+    }
+    if (item?.type === "blind") {
+      setBlindTarget(targetBoard);
+      setTimeout(() => setBlindTarget(null), 20000);
     }
   }
 
@@ -68,6 +74,7 @@ export default function Game() {
       
       <Fire target={fireballTarget} />
       <Ice target={iceTarget} />
+      <Blind target={blindTarget} />
     </div>
   )
 }

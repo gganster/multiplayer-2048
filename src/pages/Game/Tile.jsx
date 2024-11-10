@@ -39,7 +39,7 @@ function Tile({ value, player }) {
   const tileStyle = `flex items-center justify-center h-16 w-16 rounded ${getTileStyle(
     player,
     value
-  )} text-xl font-bold`;
+  )} text-xl font-bold tile`;
 
   return (
     <motion.div
