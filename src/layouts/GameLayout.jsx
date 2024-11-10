@@ -5,7 +5,7 @@ export default function GameLayout() {
   return (
     <>
       <VsBackground />
-      <div className="flex flex-col items-center justify-center h-screen w-screen z-10">
+      <div className="flex flex-col items-center justify-center h-screen w-screen z-10 overflow-hidden">
         <Outlet />
       </div>
     </>
