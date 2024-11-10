@@ -51,7 +51,7 @@ export default function use2048(player, sessionId) {
       await set(ref(db, "sessions/" + sessionId + "/" + (player === "A" ? "boardA" : "boardB")), gridWithNewNumber);
 
       //random bonus
-      if (Math.random() < 0.1) randomlyAddBonus();
+      if (Math.random() < 0.02) randomlyAddBonus();
     }
 
     //check won state
