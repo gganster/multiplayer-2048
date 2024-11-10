@@ -1,8 +1,15 @@
-# React + Vite
+# Demo
+https://multiplayer-2048.web.app/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Run locally
 
-Currently, two official plugins are available:
+You need a firebase project with realtime database activated to run this project in local
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Place your firebase config in `/config.js` file. following config-sample.js example.
+
+and then
+
+```bash
+pnpm install
+pnpm run dev
+```
