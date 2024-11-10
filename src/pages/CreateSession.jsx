@@ -35,7 +35,7 @@ export default function CreateSession() {
             stateB: "PLAYING",
             queueA: [],
             queueB: [],
-            bonusA: [{uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "fire"}],
+            bonusA: [{uid: uuidv4(), type: "ice"}, {uid: uuidv4(), type: "ice"}, {uid: uuidv4(), type: "ice"}],
             bonusB: [{uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "fire"}, {uid: uuidv4(), type: "fire"}],
             createdAt: new Date().toISOString(),
             state: "PLAYING",

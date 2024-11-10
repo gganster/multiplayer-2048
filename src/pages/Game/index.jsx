@@ -6,6 +6,7 @@ import { computeScore } from "@/utils/gameLogic";
 import Tile from "./Tile";
 import Bonus from "./Bonus";
 import Fire from "./animations/Fire";
+import Ice from "./animations/Ice";
 import GameStartAnimation from "./animations/GameStartAnimation";
 
 import use2048 from "../../hooks/use2048";
@@ -17,18 +18,19 @@ export default function Game() {
   const scoreB = useMemo(() => computeScore(gameData?.boardB), [gameData]);
 
   const [fireballTarget, setFireballTarget] = useState(null);
-
-  const _animateFire = (targetBoard) => {
-    setFireballTarget(targetBoard);
-    setTimeout(() => setFireballTarget(null), 2000); 
-  }
+  const [iceTarget, setIceTarget] = useState(null);
 
   const _activateBonus = async (item) => {
     const targetBoard = player === "A" ? "B" : "A";
     await activateBonus(item?.uid);
 
     if (item?.type === "fire") {
-      _animateFire(targetBoard);
+      setFireballTarget(targetBoard);
+      setTimeout(() => setFireballTarget(null), 2000); 
+    }
+    if (item?.type === "ice") {
+      setIceTarget(targetBoard);
+      setTimeout(() => setIceTarget(null), 10000);
     }
   }
 
@@ -65,6 +67,7 @@ export default function Game() {
       </GameStartAnimation>
       
       <Fire target={fireballTarget} />
+      <Ice target={iceTarget} />
     </div>
   )
 }

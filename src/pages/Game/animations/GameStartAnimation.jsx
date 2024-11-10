@@ -16,6 +16,7 @@ export default function GameStartAnimation({player, target, children}) {
 
   return (
     <motion.div 
+      id={`board-${target}`}
       className="w-80 absolute flex flex-col gap-5"
       initial={{ left: "50%", top: "50%", translateX: "-50%", translateY: "-50%" }}
       animate={{ 

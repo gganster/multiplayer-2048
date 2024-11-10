@@ -69,8 +69,8 @@ export default function use2048(player, sessionId) {
 
     if (!bonus) return;
 
-    await set(ref(db, `sessions/${sessionId}/queue${player === "A" ? "B" : "A"}`), bonus);
-    await set(ref(db, `sessions/${sessionId}/bonus${player}`), newBonusArray);
+    //await set(ref(db, `sessions/${sessionId}/queue${player === "A" ? "B" : "A"}`), bonus);
+    //await set(ref(db, `sessions/${sessionId}/bonus${player}`), newBonusArray);
   }
 
   return {
