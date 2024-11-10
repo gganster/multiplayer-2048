@@ -23,12 +23,18 @@ export default function CreateSession() {
       });
       subscribe = onValue(ref(db, 'sessions/' + sessionId.current), async (snapshot) => {
         const data = snapshot.val();
+        if (!data) return;
+      
         if (data.state === "OPPONENT_JOINING") {
           toast("Opponent joined the game!");
           await set(ref(db, 'sessions/' + sessionId.current), {
             ...data,
             boardA: addNumber(Array(4).fill().map(() => Array(4).fill(0))),
             boardB: addNumber(Array(4).fill().map(() => Array(4).fill(0))),
+            stateA: "PLAYING",
+            stateB: "PLAYING",
+            queueA: [],
+            queueB: [],
             createdAt: new Date().toISOString(),
             state: "PLAYING",
           });

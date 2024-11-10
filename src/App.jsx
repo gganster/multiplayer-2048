@@ -14,13 +14,16 @@ import HomePage from "./pages/Home";
 import CreateSession from "./pages/CreateSession";
 import JoinSession from "./pages/JoinSession";
 import Game from "./pages/Game";
+import GameOver from "./pages/GameOver";
 
 const router = createBrowserRouter([
+  {path: "/gameover/:player/:sessionId", element: <GameOver />},
+
   {
     path: "/game",
     element: <GameLayout />,
     children: [
-      {path: "/game/:player/:sessionId", element: <Game />}
+      {path: "/game/:player/:sessionId", element: <Game />},
     ]
   },
   {
