@@ -13,6 +13,16 @@ export default function Game() {
   const scoreB = useMemo(() => computeScore(gameData?.boardB), [gameData]);
   const [hasAnimated, setHasAnimated] = useState(false);
 
+  const bounceAnimation = {
+    y: [0, -20, 0],
+    transition: {
+      duration: 0.5,
+      repeat: 4,
+      ease: "easeInOut",
+      delay: 1 // Délai après l'animation initiale
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowUp') move('up');
@@ -30,7 +40,13 @@ export default function Game() {
       <motion.div 
         className="w-80 absolute flex flex-col gap-3"
         initial={{ left: "50%", top: "50%", translateX: "-50%", translateY: "-50%" }}
-        animate={{ left: "25%", top: "50%", translateX: "-50%", translateY: "-50%" }}
+        animate={{ 
+          left: "25%", 
+          top: "50%", 
+          translateX: "-50%", 
+          translateY: "-50%",
+          ...((player === "A" && hasAnimated) && bounceAnimation)
+        }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         onAnimationComplete={() => setHasAnimated(true)}
       >
@@ -46,7 +62,13 @@ export default function Game() {
       <motion.div 
         className="w-80 absolute flex flex-col gap-3"
         initial={{ left: "50%", top: "50%", translateX: "-50%", translateY: "-50%" }}
-        animate={{ left: "75%", top: "50%", translateX: "-50%", translateY: "-50%" }}
+        animate={{ 
+          left: "75%", 
+          top: "50%", 
+          translateX: "-50%", 
+          translateY: "-50%",
+          ...((player === "B" && hasAnimated) && bounceAnimation)
+        }}
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
       >
         <h2 className="text-3xl font-semibold text-center text-slate-950">Score: {scoreB}</h2>
